@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="stylesheet.css"/>
+    <link rel="stylesheet" href="login.css"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
@@ -12,27 +12,57 @@
 
 </head>
 <body>
-    <div class="center">
-      <h1>Login</h1>
-      <form method="post">
-        <div class="txt_field">
-          <input type="text" required>
-          <span></span>
-          <label>Username</label>
+  <div class="login">
+    <div class="login_box">
+        <h1>Admin Login</h1>
+        <div class="login_form">
+            <div class="field">
+                <label htmlFor="username">Username</label>
+                <input type="text" name="username" id="username" autoComplete="off"/>
+            </div>
+            <div class="field">
+                <label htmlFor="password">Password</label>
+                <input type="password" name="password" id="password"/>
+            </div>
+            <button class="login_btn">Login</button>
         </div>
-        <div class="txt_field">
-          <input type="password" required>
-          <span></span>
-          <label>Password</label>
-        </div>
-        <div class="pass"></div>
-        <input type="submit" value="Login">
-        <div class="signup_link">
-           <a href="#"></a>
-        </div>
-        
-      </form>
     </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.4/axios.min.js" integrity="sha512-lTLt+W7MrmDfKam+r3D2LURu0F47a3QaW5nF0c6Hl0JDZ57ruei+ovbg7BrZ+0bjVJ5YgzsAWE+RreERbpPE1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+  const login_btn = document.querySelector('.login_btn');
+
+  const uname = document.querySelector('#username');
+  const password = document.querySelector('#password');
+
+  login_btn.addEventListener('click',(e)=>{
+    let username = uname.value;
+    let password_value = password.value;
+
+    console.log(username,password_value)
+
+  
+
+    axios.post('https://contact-app-server-api.herokuapp.com/admin/login',{username,password:password_value}).then((response)=>{
+            console.log(response);
+            const {error,token} = response.data;
+            if(error){
+                return alert(error);
+            }
+
+            localStorage.setItem('is_login',token);
+
+            window.location.href='/';
+
+            
+
+            
+        }).catch((e)=>{
+            console.log(e);
+        })
+  })
+</script>
 
   </body>
   </html>

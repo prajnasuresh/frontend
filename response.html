@@ -9,6 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
 <script src="https://kit.fontawesome.com/04f2921f9f.js" crossorigin="anonymous"></script>
+<title>All Responses</title>
+
 
 </head>
 <body>
@@ -29,24 +31,44 @@
             </div>
             <i class="fa fa-bars" onclick="showMenu()"></i>
         </nav>
-        <h2>About Us</h2>
+        <h2>All Responses</h2>
 </section>
-<!-----about us content-->
-<section class="about-us">
-    <div class="row">
-        <div class="about-col">
-            <h2 class="h1">Everything you need to know about Quient Trainings</h2>
-            <p class="p2">Quient training is an enthusiastic group intended to train
-                students in colleges that are denied the privilege of Placement
-                training, A group of Enthusiasts now have a vision of training
-                students that don’t have access to placement training that can
-                help them get placed, and thereby build their future.</p>
-               
+<div class="feedback">
+    <div class="feedback__wrapper">
+        <div class="feeback__header">
+        <!-- <div class="searchbar">
+            <input type="text" placeholder="Search"/>
+        </div> -->
+        <!-- <select name="filter" id="filter" class="filter">
+            <option value="first_name">by first_name</option>
+            <option value="last_name">by last_name</option>
+            <option value="message">by message</option>
+            <option value="email">by email</option>
+        </select> -->
         </div>
-        <div class="about-col">
-        <img src="images/about.jpg" >
+        <div class="response_table">
+        <table>
+<thead>
+<tr>
+<th scope="col">First Name</th>
+<th scope="col">Last Name</th>
+<th scope="col">Email</th>
+<th scope="col">Message</th>
+</tr>
+</thead>
+<tbody>
+
+
+
+</tbody>
+</table>
+        </div>
     </div>
+</div>
+
+
 </section>
+<button class="logoutbtn">Logout</button>
 <section class="footer">
     <h4>About Us</h4>
     <span id="logo">
@@ -65,10 +87,10 @@
         <a href="https://wa.me/919123456789" class="whatsapp" target="_blank"><i class="fa fa-whatsapp status-icon"></i></a>
         
     </div>
-</section>
+</div>
 
 <!--<a href="https://wa.me/919123456789" class="whatsapp" target="_blank"><i class="fa fa-whatsapp status-icon"></i></a>-->
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.4/axios.min.js" integrity="sha512-lTLt+W7MrmDfKam+r3D2LURu0F47a3QaW5nF0c6Hl0JDZ57ruei+ovbg7BrZ+0bjVJ5YgzsAWE+RreERbpPE1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <!-----------Javascript for toggle menu-------------->
     <script>
@@ -83,6 +105,40 @@
     </script>
 
     <script src="./detect_login.js"></script>
+
+    <script>
+        const table_body = document.querySelector('tbody');
+        
+        
+
+        axios.get('https://contact-app-server-api.herokuapp.com/contact').then((response)=>{
+      const {data} = response;
+     
+      console.log(data);
+
+      data.forEach((feedback)=>{
+        table_body.innerHTML+=`
+        <tr>
+              <td data-label="First Name">${feedback.first_name}</td>
+              <td data-label="Last Name">${feedback.last_name}</td>
+              <td data-label="Email">${feedback.email}</td>
+              <td data-label="Message">${feedback.message}</td>
+              
+        </tr>`;
+      })
+    }).catch((e)=>{
+      console.log(e);
+    })
+    </script>
+
+    <script>
+        const logout_btn = document.querySelector('.logoutbtn');
+
+        logout_btn.addEventListener('click',()=>{
+            localStorage.removeItem('is_login');
+            window.location.href='/';
+        })
+    </script>
 
 
     
