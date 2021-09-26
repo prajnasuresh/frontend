@@ -36,15 +36,18 @@
 <div class="feedback">
     <div class="feedback__wrapper">
         <div class="feeback__header">
-        <!-- <div class="searchbar">
-            <input type="text" placeholder="Search"/>
-        </div> -->
-        <!-- <select name="filter" id="filter" class="filter">
+        <div class="searchbar__wrapper">
+            <div class="searchbar">
+                <input type="text" placeholder="Search" class="key"/>
+            </div>
+            <button class="search_btn">Search</button>
+        </div>
+        <select name="filter" id="filter" class="filter">
             <option value="first_name">by first_name</option>
             <option value="last_name">by last_name</option>
             <option value="message">by message</option>
             <option value="email">by email</option>
-        </select> -->
+        </select>
         </div>
         <div class="response_table">
         <table>
@@ -54,6 +57,7 @@
 <th scope="col">Last Name</th>
 <th scope="col">Email</th>
 <th scope="col">Message</th>
+<th scope="col">Action</th>
 </tr>
 </thead>
 <tbody>
@@ -118,14 +122,30 @@
 
       data.forEach((feedback)=>{
         table_body.innerHTML+=`
-        <tr>
+        <tr id="${feedback._id}">
               <td data-label="First Name">${feedback.first_name}</td>
               <td data-label="Last Name">${feedback.last_name}</td>
               <td data-label="Email">${feedback.email}</td>
               <td data-label="Message">${feedback.message}</td>
+              <td data-label="Action">
+                <button class="delete_btn">Delete</button>
+            </td>
               
         </tr>`;
       })
+
+      const del_btns = document.querySelectorAll('.delete_btn');
+
+      Array.from(del_btns).forEach((button)=>{
+            button.addEventListener('click',(e)=>{
+                const _id = e.target.parentElement.parentElement.id;
+                axios.delete(`https://contact-app-server-api.herokuapp.com/contact/${_id}`).then((response)=>{
+                    const {contacts} = response.data;
+                    window.location.href = './response.html';
+                    
+                })
+            })
+        })
     }).catch((e)=>{
       console.log(e);
     })
@@ -139,6 +159,97 @@
             window.location.href='/';
         })
     </script>
+
+    <script>
+        const filter = document.querySelector('.filter');
+
+        filter.addEventListener('change',(e)=>{
+            axios.get(`https://contact-app-server-api.herokuapp.com/contact/${e.target.value}`).then((response)=>{
+                const {data} = response;
+                const table_body = document.querySelector('tbody');
+                console.log(data);
+                table_body.innerHTML='';
+                data.forEach((feedback)=>{
+        table_body.innerHTML+=`
+        <tr id="${feedback._id}">
+              <td data-label="First Name">${feedback.first_name}</td>
+              <td data-label="Last Name">${feedback.last_name}</td>
+              <td data-label="Email">${feedback.email}</td>
+              <td data-label="Message">${feedback.message}</td>
+              <td data-label="Action">
+                <button class="delete_btn">Delete</button>
+            </td>
+              
+        </tr>`;
+      })
+
+      const del_btns = document.querySelectorAll('.delete_btn');
+
+      Array.from(del_btns).forEach((button)=>{
+            button.addEventListener('click',(e)=>{
+                const _id = e.target.parentElement.parentElement.id;
+                axios.delete(`https://contact-app-server-api.herokuapp.com/contact/${_id}`).then((response)=>{
+                    const {contacts} = response.data;
+                    window.location.href = './response.html';
+                    
+                })
+            })
+        })
+                
+            }).catch((e)=>{
+                console.log(e.message);
+            })
+        })
+    </script>
+
+    <script>
+        const search_btn = document.querySelector('.search_btn');
+        let table_body_final = document.querySelector('tbody');
+        search_btn.addEventListener('click',()=>{
+            const query = document.querySelector('.key').value;
+            axios.post(`https://contact-app-server-api.herokuapp.com/feedback/search`,{
+                key:query
+            }).then((response)=>{
+                table_body_final.innerHTML =  '';
+                console.log(response);
+                const {data} = response;
+
+                data.forEach((feedback)=>{
+                    table_body_final.innerHTML+=`
+        <tr id="${feedback._id}">
+              <td data-label="First Name">${feedback.first_name}</td>
+              <td data-label="Last Name">${feedback.last_name}</td>
+              <td data-label="Email">${feedback.email}</td>
+              <td data-label="Message">${feedback.message}</td>
+              <td data-label="Action">
+                <button class="delete_btn">Delete</button>
+            </td>
+              
+        </tr>`;
+      })
+
+      const del_btns = document.querySelectorAll('.delete_btn');
+
+      Array.from(del_btns).forEach((button)=>{
+            button.addEventListener('click',(e)=>{
+                const _id = e.target.parentElement.parentElement.id;
+                axios.delete(`https://contact-app-server-api.herokuapp.com/contact/${_id}`).then((response)=>{
+                    const {contacts} = response.data;
+                    window.location.href = './response.html';
+                    
+                })
+            })
+        })
+
+
+                
+            }).catch((e)=>{
+                console.log(e.message);
+            })
+        })
+    </script>
+
+   
 
 
     
